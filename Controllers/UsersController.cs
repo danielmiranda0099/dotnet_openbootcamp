@@ -17,11 +17,19 @@ public class UsersController : ControllerBase {
 
     [HttpGet]
     public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
+        if( _context.Users == null){ 
+            return NotFound(); 
+        }
+
         return await _context.Users.ToListAsync();
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(int Id) {
+        if( _context.Users == null){ 
+            return NotFound(); 
+        }
+        
         var user = await _context.Users.FindAsync(Id);
 
         if(user == null){
@@ -57,6 +65,9 @@ public class UsersController : ControllerBase {
 
     [HttpPost]
     public async Task<ActionResult<User>> PostUser(User user){
+        if( _context.Users == null){ 
+            return NotFound(); 
+        }
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
@@ -65,6 +76,9 @@ public class UsersController : ControllerBase {
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(int Id){
+        if( _context.Users == null){ 
+            return NotFound(); 
+        }
         var user = await _context.Users.FindAsync(Id);
 
         if( user == null ){
@@ -78,6 +92,10 @@ public class UsersController : ControllerBase {
     }
 
     private bool UserExists(int Id){
+        if( _context.Users == null){ 
+            return false; 
+        }
+
         return _context.Users.Any( user => user.Id == Id);
     }
 }
